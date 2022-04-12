@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs 
+Content-Type: application/json
+
+{
+	"title": "Vue Basics",
+	"author": "James Samuel",
+	"url": "https://codeburst.io/vuejs-the-basics-in-4-mins-6208df76003d",
+	"likes": 4
+}
