@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-	"title": "Vue Basics",
-	"author": "James Samuel",
-	"url": "https://codeburst.io/vuejs-the-basics-in-4-mins-6208df76003d",
-	"likes": 4
+	"title": "Functional Programming",
+	"author": "Ari Joury",
+	"url": "https://towardsdatascience.com/why-developers-are-falling-in-love-with-functional-programming-13514df4048e",
+	"likes": 18
 }
