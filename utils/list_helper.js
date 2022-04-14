@@ -20,6 +20,21 @@ const favouriteBlog = blogs => {
 	}
 }
 
+const countBlogs = (blogs, author) => {
+	return blogs.filter(blog => blog.author === author).length
+}
+
+const mostBlogs = blogs => {
+	if (blogs.length === 0) return
+	const blogsPerAuthor = blogs.map(b => b.author).map(author => {
+		return {
+			'author': author,
+			'blogs': countBlogs(blogs, author)
+		}
+	})
+	return blogsPerAuthor.reduce((prev, current) => current.blogs > prev.blogs ? current : prev)
+}
+
 module.exports = {
-	dummy, totalLikes, favouriteBlog
+	dummy, totalLikes, favouriteBlog, mostBlogs
 }
