@@ -52,6 +52,19 @@ describe('adding a blog', () => {
 		expect(blogsAtEnd.body).toHaveLength(blogs.length + 1)
 		expect(titles).toContain('Test blog')
 	})
+
+	test('a blog added without likes will have its likes value default to 0', async () => {
+		const newBlog = {
+			title: 'Test blog',
+			author: 'Miguel',
+			url: 'google.com',
+		}
+		const postedBlog = await api
+			.post('/api/blogs')
+			.send(newBlog)
+		expect(postedBlog._body.likes).toBeDefined()
+		expect(postedBlog._body.likes).toBe(0)
+	})
 })
 
 afterAll(() => {
