@@ -65,6 +65,16 @@ describe('adding a blog', () => {
 		expect(postedBlog._body.likes).toBeDefined()
 		expect(postedBlog._body.likes).toBe(0)
 	})
+
+	test('a blog added without a title and url will result in a 400 response code', async () => {
+		const newBlog = {
+			author: 'jake'
+		}
+		await api
+			.post('/api/blogs')
+			.send(newBlog)
+			.expect(400)
+	})
 })
 
 afterAll(() => {
