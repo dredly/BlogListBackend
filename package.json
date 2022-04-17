@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "jest --verbose",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "test": " cross-env NODE_ENV=test jest --verbose --runInBand --forceExit",
     "lint": "eslint --fix --ext .js,.jsx ."
   },
   "keywords": [],
@@ -15,15 +15,18 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.3",
+    "express-async-errors": "^3.1.1",
     "mongoose": "^6.2.10"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.0",
     "eslint": "^8.13.0",
     "jest": "^27.5.1",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "supertest": "^6.2.2"
   },
   "jest": {
-   "testEnvironment": "node"
- }
+    "testEnvironment": "node"
+  }
 }
