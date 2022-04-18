@@ -1,4 +1,5 @@
 const { blogs } = require('./dummy_data')
+const { nonExistingId } = require('./test_helpers')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
@@ -74,6 +75,30 @@ describe('adding a blog', () => {
 			.post('/api/blogs')
 			.send(newBlog)
 			.expect(400)
+	})
+})
+
+describe('deleting a blog', () => {
+	test('succeeds with status code 204 if id is valid', async () => {
+		const blogsAtStart = await api.get('/api/blogs')
+		const blogToDelete = blogsAtStart.body[0]
+		await api
+			.delete(`/api/blogs/${blogToDelete.id}`)
+			.expect(204)
+
+		const blogsAtEnd = await api.get('/api/blogs')
+		expect(blogsAtEnd.body).toHaveLength(blogs.length - 1)
+		const titles = blogsAtEnd.body.map(b => b.title)
+		expect(titles).not.toContain(blogToDelete.title)
+	})
+
+	test('still responds with status code 204 if blog is not found, but nothing is deleted', async () => {
+		const id = await nonExistingId()
+		await api
+			.delete(`/api/blogs/${id}`)
+			.expect(204)
+		const blogsAtEnd = await api.get('/api/blogs')
+		expect(blogsAtEnd.body).toHaveLength(blogs.length)
 	})
 })
 
