@@ -102,6 +102,28 @@ describe('deleting a blog', () => {
 	})
 })
 
+describe('updating a blog', () => {
+	test('succeeds with valid data', async () => {
+		const blogsAtStart = await api.get('/api/blogs')
+		const blogToUpdate = blogsAtStart.body[0]
+		const blogWithChanges = { ...blogToUpdate, likes: 10 }
+		await api
+			.put(`/api/blogs/${blogToUpdate.id}`)
+			.send(blogWithChanges)
+			.expect(200)
+			.expect('Content-Type', /application\/json/)
+	})
+	test('fails with status code 400 if given invalid data', async () => {
+		const blogsAtStart = await api.get('/api/blogs')
+		const blogToUpdate = blogsAtStart.body[0]
+		const blogWithChanges = { ...blogToUpdate, likes: -10 }
+		await api
+			.put(`/api/blogs/${blogToUpdate.id}`)
+			.send(blogWithChanges)
+			.expect(400)
+	})
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
