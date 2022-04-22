@@ -1,9 +1,11 @@
 const { blogs } = require('./dummy_data')
-const { nonExistingId } = require('./test_helpers')
+const { nonExistingId, usersInDb } = require('./test_helpers')
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const api = supertest(app)
 
@@ -121,6 +123,103 @@ describe('updating a blog', () => {
 			.put(`/api/blogs/${blogToUpdate.id}`)
 			.send(blogWithChanges)
 			.expect(400)
+	})
+})
+
+describe('creating a user', () => {
+	beforeEach(async () => {
+		await User.deleteMany({})
+		const passwordHash = await bcrypt.hash('miguel', 10)
+		const user = new User({ username: 'root', passwordHash })
+		await user.save()
+	})
+
+	test('creation succeeds with a fresh username and valid data', async () => {
+		const usersAtStart = await usersInDb()
+		const newUser = {
+			username: 'zlatan123',
+			name: 'Zlatan Ibrahimovic',
+			password: 'zlatan'
+		}
+		await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(201)
+			.expect('Content-Type', /application\/json/)
+
+		const usersAtEnd = await usersInDb()
+		expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+		const usernames = usersAtEnd.map(u => u.username)
+		expect(usernames).toContain(newUser.username)
+	})
+
+	test('creation fails with proper status code and message if username taken, but data otherwise valid', async () => {
+		const usersAtStart = await usersInDb()
+		const newUser = {
+			username: 'root',
+			password: 'rootpass'
+		}
+		const result = await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(400)
+			.expect('Content-Type', /application\/json/)
+
+		expect(result.body.error).toContain('username must be unique')
+		const usersAtEnd = await usersInDb()
+		expect(usersAtEnd).toEqual(usersAtStart)
+	})
+
+	test('creation fails with proper status code and message if password is less than 3 characters', async () => {
+		const usersAtStart = await usersInDb()
+		const newUser = {
+			username: 'johnnyd',
+			password: 'jd'
+		}
+		const result = await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(400)
+			.expect('Content-Type', /application\/json/)
+
+		expect(result.body.error).toContain('password must be at least 3 characters')
+		const usersAtEnd = await usersInDb()
+		expect(usersAtEnd).toEqual(usersAtStart)
+	})
+
+	test('creation fails with proper status code and message if username is less than 3 characters', async () => {
+		const usersAtStart = await usersInDb()
+		const newUser = {
+			username: 'j',
+			password: 'johnnyd123'
+		}
+		const result = await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(400)
+			.expect('Content-Type', /application\/json/)
+
+		expect(result.body.error).toContain('shorter than the minimum allowed length (3)')
+		const usersAtEnd = await usersInDb()
+		expect(usersAtEnd).toEqual(usersAtStart)
+	})
+
+	test('creation fails with proper status code and message if username not provided', async () => {
+		const usersAtStart = await usersInDb()
+		const newUser = {
+			name: 'joe',
+			password: 'joejoe'
+		}
+		const result = await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(400)
+			.expect('Content-Type', /application\/json/)
+
+		expect(result.body.error).toContain('User validation failed: username: Path `username` is required.')
+		const usersAtEnd = await usersInDb()
+		expect(usersAtEnd).toEqual(usersAtStart)
 	})
 })
 
