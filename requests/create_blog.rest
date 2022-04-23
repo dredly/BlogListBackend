@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs 
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pZ3VlbCIsImlkIjoiNjI2M2ZjNmI1OWJmMzg0MGI4MzZkMTE1IiwiaWF0IjoxNjUwNzM5NzMwLCJleHAiOjE2NTA3NDMzMzB9.baqiqh0BWgTfqqG-xcRdjB3C1s7qcFlPL2gyPUSDcC8
 
 {
-	"title": "Test blog",
+	"title": "Auth Test",
 	"author": "Ari Joury",
 	"url": "https://google.com",
-	"likes": 3
+	"likes": 5
 }
