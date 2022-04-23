@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-	"title": "Functional Programming",
+	"title": "Test blog",
 	"author": "Ari Joury",
-	"url": "https://towardsdatascience.com/why-developers-are-falling-in-love-with-functional-programming-13514df4048e",
-	"likes": 18
+	"url": "https://google.com",
+	"likes": 3
 }
