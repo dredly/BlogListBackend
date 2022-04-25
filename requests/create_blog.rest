@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs 
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pZ3VlbCIsImlkIjoiNjI2M2ZjNmI1OWJmMzg0MGI4MzZkMTE1IiwiaWF0IjoxNjUwNzM5NzMwLCJleHAiOjE2NTA3NDMzMzB9.baqiqh0BWgTfqqG-xcRdjB3C1s7qcFlPL2gyPUSDcC8
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pZ3VlbCIsImlkIjoiNjI2M2ZjNmI1OWJmMzg0MGI4MzZkMTE1IiwiaWF0IjoxNjUwODkxOTY0LCJleHAiOjE2NTA4OTU1NjR9._gOInLPuZKT1xlV2FseqqmOgTlZAru5Gm26ILpJJxnE
 
 {
-	"title": "Auth Test",
-	"author": "Ari Joury",
+	"title": "Auth Test 2",
+	"author": "Bob",
 	"url": "https://google.com",
 	"likes": 5
 }
