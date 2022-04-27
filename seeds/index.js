@@ -2,19 +2,12 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const config = require('../utils/config')
 const logger = require('../utils/logger')
+const { asyncForEach } = require('../utils/helper_functions')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
 const { initialUsers } = require('./initial_users')
 const { initialBlogs } = require('./initial_blogs')
-
-// Code taken from Sebastina Chopin
-// https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404
-async function asyncForEach(array, callback) {
-	for (let index = 0; index < array.length; index++) {
-		await callback(array[index], index, array)
-	}
-}
 
 const seedDb = async () => {
 	logger.info('Seeding db')
@@ -54,3 +47,4 @@ mongoose.connect(config.MONGODB_URI)
 		logger.error('error connecting to MongoDB:', error.message)
 	})
 
+module.exports = asyncForEach

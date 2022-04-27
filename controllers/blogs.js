@@ -35,6 +35,9 @@ blogsRouter.put('/:id', async (request, response) => {
 blogsRouter.delete('/:id', async (request, response) => {
 	const user = request.user
 	const blog = await Blog.findById(request.params.id)
+	if (!blog) {
+		return response.status(400).json({ error: 'This blog does not exist' })
+	}
 	if (blog.user.toString() !== user._id.toString()) {
 		return response.status(403).json({ error: 'forbidden - you can only delete your own blog' })
 	}
