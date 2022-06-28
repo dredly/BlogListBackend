@@ -6,6 +6,14 @@ blogsRouter.get('/', async (request, response) => {
 	response.json(blogs)
 })
 
+blogsRouter.get('/:id', async (request, response) => {
+	const blog = await Blog.findById(request.params.id).populate('user', { username: 1, name: 1 })
+	if (!blog) {
+		return response.status(400).json({ error: 'This blog does not exist' })
+	}
+	response.json(blog)
+})
+
 blogsRouter.post('/', async (request, response) => {
 	const user = request.user
 	const blog = new Blog(request.body)
