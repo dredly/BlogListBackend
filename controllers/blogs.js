@@ -1,5 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const Comment = require('../models/comment')
 
 blogsRouter.get('/', async (request, response) => {
 	const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -7,7 +8,9 @@ blogsRouter.get('/', async (request, response) => {
 })
 
 blogsRouter.get('/:id', async (request, response) => {
-	const blog = await Blog.findById(request.params.id).populate('user', { username: 1, name: 1 })
+	const blog = await Blog.findById(request.params.id)
+		.populate('user', { username: 1, name: 1 })
+		.populate('comments', { text: 1 })
 	if (!blog) {
 		return response.status(400).json({ error: 'This blog does not exist' })
 	}
@@ -22,6 +25,16 @@ blogsRouter.post('/', async (request, response) => {
 	user.blogs = user.blogs.concat(savedBlog._id)
 	await user.save()
 	response.status(201).json(savedBlog)
+})
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+	const blog = await Blog.findById(request.params.id)
+	const comment = new Comment(request.body)
+	comment.blog = blog._id
+	const savedComment = await comment.save()
+	blog.comments = blog.comments.concat(savedComment._id)
+	await blog.save()
+	response.status(201).json(savedComment)
 })
 
 blogsRouter.put('/:id', async (request, response) => {
